@@ -5,8 +5,10 @@
   "type": "commonjs",
   "scripts": {
     "ts-watch": "npx tsc --watch",
-    "serve": "nodemon -q dist/index.js",
-    "migrate": "prisma generate && prisma migrate dev"
+    "serve-dev": "nodemon -q dist/index.js",
+    "migrate": "prisma generate && prisma migrate dev",
+    "build": "npm install && prisma generate && npx tsc",
+    "serve": "node ./dist/index.js"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.0.1",
