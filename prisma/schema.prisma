@@ -15,8 +15,6 @@ model Review {
     text         String
     author       User        @relation(fields: [authorId], references: [id])
     authorId     Int
-    category     Category    @relation(fields: [categoryId], references: [id])
-    categoryId   Int         @db.SmallInt
     product      Product     @relation(fields: [productId], references: [id])
     productId    Int
     authorsScore Int         @db.SmallInt
@@ -27,17 +25,18 @@ model Review {
 }
 
 model User {
-    id      Int      @id @default(autoincrement())
-    nick    String   @unique @db.VarChar(255)
+    id      Int       @id @default(autoincrement())
+    nick    String    @unique @db.VarChar(255)
     reviews Review[]
     ratings Rating[]
     likes   Like[]
+    Comment Comment[]
 }
 
 model Category {
-    id      Int      @id @default(autoincrement()) @db.SmallInt
-    name    String   @db.VarChar(255)
-    reviews Review[]
+    id       Int       @id @default(autoincrement()) @db.SmallInt
+    name     String    @db.VarChar(255)
+    products Product[]
 }
 
 model Rating {
@@ -51,10 +50,12 @@ model Rating {
 }
 
 model Product {
-    id      Int      @id @default(autoincrement())
-    name    String   @db.VarChar(255)
-    ratings Rating[]
-    reviews Review[]
+    id         Int      @id @default(autoincrement())
+    name       String   @db.VarChar(255)
+    category   Category @relation(fields: [categoryId], references: [id])
+    categoryId Int      @default(1) @db.SmallInt
+    ratings    Rating[]
+    reviews    Review[]
 }
 
 model Tag {
@@ -82,6 +83,8 @@ model Like {
 
 model Comment {
     id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
     text      String
     review    Review   @relation(fields: [reviewId], references: [id])
     reviewId  Int
