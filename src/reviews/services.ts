@@ -28,7 +28,6 @@ const create = async (review: ReviewCreateProps) => {
             tagText: tag
         }
     })
-
     await prisma.review.create({
         data: {
             title: review.title,
@@ -57,7 +56,7 @@ const update = async (review: ReviewUpdateProps) => {
 }
 
 const getLatest = async (count: number = 20) => {
-    return await prisma.review.findMany({
+    const reviews = await prisma.review.findMany({
         select: {
             id: true,
             title: true,
@@ -72,10 +71,16 @@ const getLatest = async (count: number = 20) => {
             }
         ]
     })
+    return reviews.map(review => {
+        return {
+            ...review,
+            tags: review.tags.map(tag => tag.tagText)
+        }
+    })
 }
 
 const getBest = async (count: number = 20) => {
-    return await prisma.review.findMany({
+    const reviews = await prisma.review.findMany({
         select: {
             id: true,
             title: true,
@@ -91,6 +96,12 @@ const getBest = async (count: number = 20) => {
                 }
             }
         ]
+    })
+    return reviews.map(review => {
+        return {
+            ...review,
+            tags: review.tags.map(tag => tag.tagText)
+        }
     })
 }
 
@@ -110,18 +121,34 @@ const getById = async (id: number) => {
             }
         }
     })
-    return {
+    return result && {
         ...result,
-        likesCount: result?._count.likes
+        likesCount: result._count.likes,
+        tags: result.tags.map(tag => tag.tagText)
     }
 }
 
 const getByTag = async (tag: string) => {
-    return await prisma.review.findMany({
+    const reviews = await prisma.review.findMany({
         where: {
             tags: {
-                some: {}
+                some: {
+                    tagText: tag
+                }
             }
+        },
+        select: {
+            id: true,
+            title: true,
+            product: true,
+            authorsScore: true,
+            tags: true
+        }
+    })
+    return reviews.map(review => {
+        return {
+            ...review,
+            tags: review.tags.map(tag => tag.tagText)
         }
     })
 }
