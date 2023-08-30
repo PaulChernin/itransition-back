@@ -11,24 +11,34 @@ const createProduct = async (name: string, category: number) => {
     return product.id
 }
 
-// const createTags = async (texts: Array<string>) => {
-//     const data = texts.map(text => {
-//         return { text: text }
-//     })
-//     prisma.tag.createMany({
-//         data: data
-//     })
-// }
+const createTags = async (texts: Array<string>) => {
+    const data = texts.map(text => {
+        return { text: text }
+    })
+    await prisma.tag.createMany({
+        data: data
+    })
+}
 
 const create = async (review: ReviewCreateProps) => {
     const productId = await createProduct(review.productName, review.categoryId)
+    await createTags(review.tags)
+    const tagsData = review.tags.map(tag => {
+        return {
+            tagText: tag
+        }
+    })
+
     await prisma.review.create({
         data: {
             title: review.title,
             text: review.text,
             authorId: review.authorId,
             productId: productId,
-            authorsScore: review.authorsScore
+            authorsScore: review.authorsScore,
+            tags: {
+                create: tagsData
+            }
         }
     })
 }
