@@ -15,6 +15,9 @@ const getByReview = async (id: number) => {
         where: {
             reviewId: id
         },
+        include: {
+            user: true
+        },
         orderBy: {
             createdAt: 'asc'
         }

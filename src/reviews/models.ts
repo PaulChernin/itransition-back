@@ -15,3 +15,9 @@ export type ReviewUpdateProps = {
     authorsScore: number,
     tags: Array<string>
 }
+
+export type UserReviewsGetProps = {
+    userId: number,
+    category: number | undefined,
+    sortBy: 'date' | 'name'
+}

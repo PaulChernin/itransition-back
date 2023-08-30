@@ -1,4 +1,4 @@
-import { ReviewCreateProps, ReviewUpdateProps } from "./models"
+import { ReviewCreateProps, ReviewUpdateProps, UserReviewsGetProps } from "./models"
 import prisma from "../services/prisma"
 
 const createProduct = async (name: string, category: number) => {
@@ -50,6 +50,7 @@ const getLatest = async (count: number = 20) => {
     return await prisma.review.findMany({
         select: {
             id: true,
+            title: true,
             product: true,
             authorsScore: true,
             tags: true
@@ -67,6 +68,7 @@ const getBest = async (count: number = 20) => {
     return await prisma.review.findMany({
         select: {
             id: true,
+            title: true,
             product: true,
             authorsScore: true,
             tags: true
@@ -83,7 +85,7 @@ const getBest = async (count: number = 20) => {
 }
 
 const getById = async (id: number) => {
-    return await prisma.review.findUnique({
+    const result = await prisma.review.findUnique({
         where: {
             id: id
         },
@@ -98,6 +100,10 @@ const getById = async (id: number) => {
             }
         }
     })
+    return {
+        ...result,
+        likesCount: result?._count.likes
+    }
 }
 
 const getByTag = async (tag: string) => {
@@ -110,6 +116,33 @@ const getByTag = async (tag: string) => {
     })
 }
 
+const getByUser = async (props: UserReviewsGetProps) => {
+    return await prisma.review.findMany({
+        where: {
+            authorId: props.userId,
+            product: {
+                categoryId: props.category
+            }
+        },
+        select: {
+            id: true,
+            title: true
+        },
+        orderBy: {
+            createdAt: props.sortBy === 'date' ? 'desc' : undefined,
+            title: props.sortBy === 'name' ? 'asc' : undefined
+        }
+    })
+}
+
+const remove = async (id: number) => {
+    await prisma.review.delete({
+        where: {
+            id: id
+        }
+    })
+}
+
 export default {
     create,
     update,
@@ -117,4 +150,6 @@ export default {
     getBest,
     getById,
     getByTag,
+    getByUser,
+    remove
 }

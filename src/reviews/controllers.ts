@@ -1,6 +1,6 @@
 import { RequestHandler } from "express"
 import services from "./services"
-import { ReviewCreateProps, ReviewUpdateProps } from "./models"
+import { ReviewCreateProps, ReviewUpdateProps, UserReviewsGetProps } from "./models"
 
 const getBest: RequestHandler = async (req, res) => {
     const count = req.body.count
@@ -22,6 +22,11 @@ const getByTag: RequestHandler = async (req, res) => {
     res.json(await services.getByTag(tag))
 }
 
+const getByUser: RequestHandler = async (req, res) => {
+    const props: UserReviewsGetProps = req.body
+    res.json(await services.getByUser(props))
+}
+
 const create: RequestHandler = async (req, res) => {
     const review: ReviewCreateProps = req.body
     await services.create(review)
@@ -34,11 +39,19 @@ const update: RequestHandler = async (req, res) => {
     res.end()
 }
 
+const remove: RequestHandler = async (req, res) => {
+    const id = req.body
+    await services.remove(id)
+    res.end()
+}
+
 export default {
     getBest,
     getLatest,
     getById,
     getByTag,
+    getByUser,
     create,
     update,
+    remove
 }
