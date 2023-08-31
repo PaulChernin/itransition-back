@@ -1,6 +1,6 @@
 export type ReviewCreateProps = {
     authorId: number,
-    categoryId: number,
+    categoryName: string,
     productName: string,
     title: string,
     text: string,
@@ -18,6 +18,6 @@ export type ReviewUpdateProps = {
 
 export type UserReviewsGetProps = {
     userId: number,
-    category: number | undefined,
+    category: string,
     sortBy: 'date' | 'name'
 }

@@ -34,8 +34,7 @@ model User {
 }
 
 model Category {
-    id       Int       @id @default(autoincrement()) @db.SmallInt
-    name     String    @db.VarChar(255)
+    name     String    @id @db.VarChar(255)
     products Product[]
 }
 
@@ -50,12 +49,12 @@ model Rating {
 }
 
 model Product {
-    id         Int      @id @default(autoincrement())
-    name       String   @db.VarChar(255)
-    category   Category @relation(fields: [categoryId], references: [id])
-    categoryId Int      @default(1) @db.SmallInt
-    ratings    Rating[]
-    reviews    Review[]
+    id           Int      @id @default(autoincrement())
+    name         String   @db.VarChar(255)
+    ratings      Rating[]
+    reviews      Review[]
+    category     Category @relation(fields: [categoryName], references: [name])
+    categoryName String   @default("book") @db.VarChar(255)
 }
 
 model Tag {

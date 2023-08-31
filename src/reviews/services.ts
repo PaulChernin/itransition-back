@@ -1,11 +1,11 @@
 import { ReviewCreateProps, ReviewUpdateProps, UserReviewsGetProps } from "./models"
 import prisma from "../services/prisma"
 
-const createProduct = async (name: string, category: number) => {
+const createProduct = async (name: string, category: string) => {
     const product = await prisma.product.create({
         data: {
             name: name,
-            categoryId: category
+            categoryName: category
         }
     })
     return product.id
@@ -22,7 +22,7 @@ const createTags = async (texts: Array<string>) => {
 }
 
 const create = async (review: ReviewCreateProps) => {
-    const productId = await createProduct(review.productName, review.categoryId)
+    const productId = await createProduct(review.productName, review.categoryName)
     await createTags(review.tags)
     const tagsData = review.tags.map(tag => {
         return {
@@ -171,7 +171,7 @@ const getByUser = async (props: UserReviewsGetProps) => {
         where: {
             authorId: props.userId,
             product: {
-                categoryId: props.category
+                categoryName: props.category
             }
         },
         select: {
