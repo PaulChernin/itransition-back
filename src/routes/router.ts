@@ -4,6 +4,8 @@ import likeControllers from "../likes/controllers"
 import ratingControllers from "../ratings/controllers"
 import commentControllers from "../comments/controllers"
 import userControllers from "../users/controllers"
+import tagControllers from "../tags/controllers"
+
 const router = Router()
 
 router.post('/review/get/best', reviewControllers.getBest)
@@ -21,5 +23,7 @@ router.post('/comment/create', commentControllers.createComment)
 router.post('/comment/get/byReview', commentControllers.getByReview)
 router.post('/user/get/all', userControllers.getAll)
 router.post('/user/create', userControllers.create)
+router.post('/tag/get/popular', tagControllers.getPopular)
+router.post('/tag/get/byPrefix', tagControllers.getByPrefix)
 
 export default router

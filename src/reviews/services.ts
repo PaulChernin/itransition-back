@@ -16,7 +16,8 @@ const createTags = async (texts: Array<string>) => {
         return { text: text }
     })
     await prisma.tag.createMany({
-        data: data
+        data: data,
+        skipDuplicates: true
     })
 }
 
@@ -42,7 +43,22 @@ const create = async (review: ReviewCreateProps) => {
     })
 }
 
+const removeTags = async (reviewId: number) => {
+    await prisma.reviewTag.deleteMany({
+        where: {
+            reviewId: reviewId
+        }
+    })
+}
+
 const update = async (review: ReviewUpdateProps) => {
+    await removeTags(review.id)
+    await createTags(review.tags)
+    const tagsData = review.tags.map(tag => {
+        return {
+            tagText: tag
+        }
+    })
     await prisma.review.update({
         where: {
             id: review.id
@@ -50,7 +66,10 @@ const update = async (review: ReviewUpdateProps) => {
         data: {
             title: review.title,
             text: review.text,
-            authorsScore: review.authorsScore
+            authorsScore: review.authorsScore,
+            tags: {
+                create: tagsData
+            }
         }
     })
 }
