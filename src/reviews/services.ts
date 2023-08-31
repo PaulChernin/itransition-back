@@ -132,17 +132,11 @@ const getById = async (id: number) => {
         include: {
             author: true,
             product: true,
-            tags: true,
-            _count: {
-                select: {
-                    likes: true
-                }
-            }
+            tags: true
         }
     })
     return result && {
         ...result,
-        likesCount: result._count.likes,
         tags: result.tags.map(tag => tag.tagText)
     }
 }
