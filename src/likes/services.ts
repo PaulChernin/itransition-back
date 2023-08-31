@@ -1,11 +1,12 @@
 import prisma from "../services/prisma"
 
 const count = async (reviewId: number) => {
-    return await prisma.like.count({
+    const count = await prisma.like.count({
         where: {
             reviewId: reviewId
         }
     })
+    return count
 }
 
 const isLikeExists = async (reviewId: number, userId: number) => {
@@ -41,7 +42,9 @@ const createLike = async (userId: number, reviewId: number) => {
         },
         update: {}
     })
-    return await count(reviewId)
+    return {
+        count: await count(reviewId)
+    }
 }
 
 const removeLike = async (userId: number, reviewId: number) => {
@@ -53,7 +56,9 @@ const removeLike = async (userId: number, reviewId: number) => {
             }
         }
     })
-    return await count(reviewId)
+    return {
+        count: await count(reviewId)
+    }
 }
 
 export default {
