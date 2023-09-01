@@ -36,6 +36,7 @@ const create = async (review: ReviewCreateProps) => {
             authorId: review.authorId,
             productId: productId,
             authorsScore: review.authorsScore,
+            imageUrl: review.imageUrl,
             tags: {
                 create: tagsData
             }

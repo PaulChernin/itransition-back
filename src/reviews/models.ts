@@ -5,7 +5,8 @@ export type ReviewCreateProps = {
     title: string,
     text: string,
     authorsScore: number,
-    tags: Array<string>
+    tags: Array<string>,
+    imageUrl: string
 }
 
 export type ReviewUpdateProps = {
