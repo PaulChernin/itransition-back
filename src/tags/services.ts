@@ -9,9 +9,21 @@ const getPopular = async (count: number = 20) => {
                 }
             }
         ],
-        take: count
+        take: count,
+        include: {
+            _count: {
+                select: {
+                    reviews: true
+                }
+            }
+        }
     })
-    return tags.map(tag => tag.text)
+    return tags.map(tag => {
+        return {
+            value: tag.text,
+            count: tag._count.reviews
+        }
+    })
 }
 
 const getByPrefix = async (prefix: string) => {
