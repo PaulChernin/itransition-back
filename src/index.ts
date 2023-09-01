@@ -4,17 +4,21 @@ import bodyParser from 'body-parser'
 import cors from './config/cors'
 import logger from './config/logger'
 import router from './routes/router'
-import authenticateImplicitWithAdc from './cloud/cloud'
-
-// authenticateImplicitWithAdc()
+import os from 'os'
+import formData from 'express-form-data'
 
 const app = express()
 app.use(cors)
 app.use(logger)
 app.use(bodyParser.json())
-// app.use(bodyParser.urlencoded({
-//     extended: true
-// }))
+
+const options = {
+    uploadDir: os.tmpdir(),
+    autoClean: true
+}
+app.use(formData.parse(options))
+app.use(formData.format())
+app.use(formData.union())
 
 app.use(router)
 
