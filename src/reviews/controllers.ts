@@ -29,8 +29,8 @@ const getByUser: RequestHandler = async (req, res) => {
 
 const create: RequestHandler = async (req, res) => {
     const review: ReviewCreateProps = req.body
-    await services.create(review)
-    res.end()
+    const id = await services.create(review)
+    res.json({ id: id })
 }
 
 const update: RequestHandler = async (req, res) => {
@@ -40,7 +40,7 @@ const update: RequestHandler = async (req, res) => {
 }
 
 const remove: RequestHandler = async (req, res) => {
-    const id = req.body
+    const id = req.body.id
     await services.remove(id)
     res.end()
 }

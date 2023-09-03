@@ -29,7 +29,7 @@ const create = async (review: ReviewCreateProps) => {
             tagText: tag
         }
     })
-    await prisma.review.create({
+    const { id } = await prisma.review.create({
         data: {
             title: review.title,
             text: review.text,
@@ -42,6 +42,7 @@ const create = async (review: ReviewCreateProps) => {
             }
         }
     })
+    return id
 }
 
 const removeTags = async (reviewId: number) => {
