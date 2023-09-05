@@ -6,6 +6,7 @@ import commentControllers from "../comments/controllers"
 import userControllers from "../users/controllers"
 import tagControllers from "../tags/controllers"
 import imageControllers from "../images/controllers"
+import authControllers from "../auth/controllers"
 
 const router = Router()
 
@@ -28,5 +29,6 @@ router.post('/user/create', userControllers.create)
 router.post('/tag/get/popular', tagControllers.getPopular)
 router.post('/tag/get/byPrefix', tagControllers.getByPrefix)
 router.post('/image/create', imageControllers.create)
+router.post('/vk-auth', authControllers.vkAuth)
 
 export default router
