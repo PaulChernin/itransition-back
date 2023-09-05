@@ -26,7 +26,8 @@ model Review {
 
 model User {
     id      Int       @id @default(autoincrement())
-    nick    String    @unique @db.VarChar(255)
+    nick    String    @db.VarChar(255)
+    vkId    Int?      @unique
     reviews Review[]
     ratings Rating[]
     likes   Like[]
