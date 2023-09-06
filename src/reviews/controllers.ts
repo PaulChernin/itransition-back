@@ -14,7 +14,12 @@ const getLatest: RequestHandler = async (req, res) => {
 
 const getById: RequestHandler = async (req, res) => {
     const id = req.body.id
-    res.json(await services.getById(id))
+    const review = await services.getById(id)
+    if (review) {
+        res.json(review)
+        return
+    }
+    res.status(404).end()
 }
 
 const getByTag: RequestHandler = async (req, res) => {
@@ -24,7 +29,8 @@ const getByTag: RequestHandler = async (req, res) => {
 
 const getByUser: RequestHandler = async (req, res) => {
     const props: UserReviewsGetProps = req.body
-    res.json(await services.getByUser(props))
+    const reviews = await services.getByUser(props)
+    res.json(reviews)
 }
 
 const create: RequestHandler = async (req, res) => {
