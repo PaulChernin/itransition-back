@@ -12,10 +12,10 @@ const findOrCreateByVkId = async (vkId: number, vkName: string) => {
         update: {},
         select: {
             id: true,
-            nick: true
+            nick: true,
+            isAdmin: true
         }
     })
-    console.log(user)
     return user
 }
 

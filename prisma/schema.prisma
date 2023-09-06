@@ -27,6 +27,7 @@ model Review {
 model User {
     id      Int       @id @default(autoincrement())
     nick    String    @db.VarChar(255)
+    isAdmin Boolean   @default(false)
     vkId    Int?      @unique
     reviews Review[]
     ratings Rating[]

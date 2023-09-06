@@ -1,6 +1,7 @@
 import axios from "axios"
 import { RequestHandler } from "express"
 import services from "./services"
+import { makeJwt } from "./jwt"
 
 const serviceToken = process.env.VK_SERVICE_TOKEN
 const version = '5.131'
@@ -31,7 +32,8 @@ const vkAuth: RequestHandler = async (req, res) => {
         return
     }
     const user = await services.findOrCreateByVkId(userVkId, silent.user.first_name)
-    res.json(user)
+    const token = makeJwt(user)
+    res.json({ user, token })
 }
 
 export default {
