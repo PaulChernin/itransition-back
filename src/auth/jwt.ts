@@ -1,4 +1,4 @@
-import { User } from "./types/user"
+import { User } from "../types/User"
 import jwt from 'jsonwebtoken'
 
 const key = process.env.JWT_KEY

@@ -1,8 +1,11 @@
-import { RequestHandler } from "express"
+import { RequestHandler, Response } from "express"
+import { Request as JwtRequest } from "express-jwt"
 import services from "./services"
+import { User } from "../types/User"
 
-const createComment: RequestHandler = async (req, res) => {
-    const { userId, text, reviewId } = req.body
+const createComment = async (req: JwtRequest<User>, res: Response) => {
+    const userId = req.auth!.id
+    const { text, reviewId } = req.body
     await services.createComment(userId, text, reviewId)
     res.end()
 }
