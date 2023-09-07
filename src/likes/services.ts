@@ -39,8 +39,18 @@ const removeLike = async (userId: number, reviewId: number) => {
     })
 }
 
+const getLikeCount = async (reviewId: number) => {
+    const count = await prisma.like.count({
+        where: {
+            reviewId: reviewId
+        }
+    })
+    return count
+}
+
 export default {
     createLike,
     removeLike,
-    isLikeExists
+    isLikeExists,
+    getLikeCount
 }

@@ -24,8 +24,15 @@ const getLike: RequestHandler = async (req: JwtRequest<User>, res) => {
     res.json({ userLike: userLike })
 }
 
+const getLikeCount: RequestHandler = async (req, res) => {
+    const { reviewId } = req.body
+    const likeCount = await services.getLikeCount(reviewId)
+    res.json({ count: likeCount })
+}
+
 export default {
     createLike,
     removeLike,
+    getLikeCount,
     getLike
 }
