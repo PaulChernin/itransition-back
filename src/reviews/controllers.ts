@@ -42,7 +42,7 @@ const getByUser: RequestHandler = async (req: JwtRequest<User>, res) => {
 
 const create: RequestHandler = async (req: JwtRequest<User>, res) => {
     const user = req.auth!
-    if (!user.isAdmin && user.id === req.body.authorId) {
+    if (!user.isAdmin && user.id !== req.body.authorId) {
         res.status(403).end()
         return
     }
