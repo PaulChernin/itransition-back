@@ -19,6 +19,21 @@ const createRating = async (userId: number, productId: number, rating: number) =
     })
 }
 
+const getAverageRating = async (productId: number) => {
+    const result = await prisma.rating.aggregate({
+        _avg: {
+            rating: true
+        },
+        where: {
+            productId: productId
+        }
+    })
+    return {
+        average: result._avg.rating || 0
+    }
+}
+
 export default {
-    createRating
+    createRating,
+    getAverageRating
 }
