@@ -9,6 +9,11 @@ const getPopular = async (count: number = 20) => {
                 }
             }
         ],
+        where: {
+            reviews: {
+                some: {}
+            }
+        },
         take: count,
         include: {
             _count: {
@@ -18,6 +23,7 @@ const getPopular = async (count: number = 20) => {
             }
         }
     })
+    console.log(tags)
     return tags.map(tag => {
         return {
             value: tag.text,
