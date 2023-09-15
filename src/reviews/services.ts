@@ -76,15 +76,38 @@ const update = async (review: ReviewUpdateProps) => {
     })
 }
 
+const reviewQueryInclude = {
+    author: true,
+    product: true,
+    tags: true,
+    _count: {
+        select: {
+            likes: true,
+            comments: true
+        }
+    }
+}
+
+const reviewQuery = async () => {
+    return await prisma.review.findFirst({
+        include: reviewQueryInclude
+    })
+}
+
+type reviewQueryResponse = Awaited<ReturnType<typeof reviewQuery>>
+
+const mapReviewResponse = (result: reviewQueryResponse) => {
+    return result && {
+        ...result,
+        tags: result.tags.map(tag => tag.tagText),
+        likesCount: result._count.likes,
+        commentsCount: result._count.comments
+    }
+}
+
 const getLatest = async (count: number = 20) => {
     const reviews = await prisma.review.findMany({
-        select: {
-            id: true,
-            title: true,
-            product: true,
-            authorsScore: true,
-            tags: true
-        },
+        include: reviewQueryInclude,
         take: count,
         orderBy: [
             {
@@ -92,23 +115,12 @@ const getLatest = async (count: number = 20) => {
             }
         ]
     })
-    return reviews.map(review => {
-        return {
-            ...review,
-            tags: review.tags.map(tag => tag.tagText)
-        }
-    })
+    return reviews.map(review => mapReviewResponse(review))
 }
 
 const getBest = async (count: number = 20) => {
     const reviews = await prisma.review.findMany({
-        select: {
-            id: true,
-            title: true,
-            product: true,
-            authorsScore: true,
-            tags: true
-        },
+        include: reviewQueryInclude,
         take: count,
         orderBy: [
             {
@@ -118,12 +130,7 @@ const getBest = async (count: number = 20) => {
             }
         ]
     })
-    return reviews.map(review => {
-        return {
-            ...review,
-            tags: review.tags.map(tag => tag.tagText)
-        }
-    })
+    return reviews.map(review => mapReviewResponse(review))
 }
 
 const getById = async (id: number) => {
@@ -143,12 +150,7 @@ const getById = async (id: number) => {
             }
         }
     })
-    return result && {
-        ...result,
-        tags: result.tags.map(tag => tag.tagText),
-        likesCount: result._count.likes,
-        commentsCount: result._count.comments
-    }
+    return mapReviewResponse(result)
 }
 
 const getByTag = async (tag: string) => {
@@ -160,39 +162,26 @@ const getByTag = async (tag: string) => {
                 }
             }
         },
-        select: {
-            id: true,
-            title: true,
-            product: true,
-            authorsScore: true,
-            tags: true
-        }
+        include: reviewQueryInclude
     })
-    return reviews.map(review => {
-        return {
-            ...review,
-            tags: review.tags.map(tag => tag.tagText)
-        }
-    })
+    return reviews.map(review => mapReviewResponse(review))
 }
 
 const getByUser = async (props: UserReviewsGetProps) => {
-    return await prisma.review.findMany({
+    const reviews = await prisma.review.findMany({
         where: {
             authorId: props.userId,
             product: {
                 categoryName: props.category
             }
         },
-        select: {
-            id: true,
-            title: true
-        },
+        include: reviewQueryInclude,
         orderBy: {
             createdAt: props.sortBy === 'date' ? 'desc' : undefined,
             title: props.sortBy === 'name' ? 'asc' : undefined
         }
     })
+    return reviews.map(review => mapReviewResponse(review))
 }
 
 const remove = async (id: number) => {
