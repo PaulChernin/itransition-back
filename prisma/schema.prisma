@@ -65,7 +65,7 @@ model Tag {
 }
 
 model ReviewTag {
-    review   Review @relation(fields: [reviewId], references: [id])
+    review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
     reviewId Int
     tag      Tag    @relation(fields: [tagText], references: [text])
     tagText  String @db.VarChar(255)
@@ -76,7 +76,7 @@ model ReviewTag {
 model Like {
     user     User   @relation(fields: [userId], references: [id])
     userId   Int
-    review   Review @relation(fields: [reviewId], references: [id])
+    review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
     reviewId Int
 
     @@id([userId, reviewId])
@@ -87,7 +87,7 @@ model Comment {
     user      User     @relation(fields: [userId], references: [id])
     userId    Int
     text      String
-    review    Review   @relation(fields: [reviewId], references: [id])
+    review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
     reviewId  Int
     createdAt DateTime @default(now())
 }
