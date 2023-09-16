@@ -1,4 +1,4 @@
-import { ReviewCreateProps, ReviewUpdateProps, UserReviewsGetProps } from "./models"
+import { ReviewFormData, UserReviewsGetProps } from "./models"
 import prisma from "../services/prisma"
 
 const createProduct = async (name: string, category: string) => {
@@ -21,8 +21,8 @@ const createTags = async (texts: Array<string>) => {
     })
 }
 
-const create = async (review: ReviewCreateProps) => {
-    const productId = await createProduct(review.productName, review.categoryName)
+const create = async (authorId: number, review: ReviewFormData) => {
+    const productId = await createProduct(review.productName, review.productCategory)
     await createTags(review.tags)
     const tagsData = review.tags.map(tag => {
         return {
@@ -33,9 +33,9 @@ const create = async (review: ReviewCreateProps) => {
         data: {
             title: review.title,
             text: review.text,
-            authorId: review.authorId,
+            authorId: authorId,
             productId: productId,
-            authorsScore: review.authorsScore,
+            authorsScore: review.authorScore,
             imageUrl: review.imageUrl,
             tags: {
                 create: tagsData
@@ -53,8 +53,8 @@ const removeTags = async (reviewId: number) => {
     })
 }
 
-const update = async (review: ReviewUpdateProps) => {
-    await removeTags(review.id)
+const update = async (id: number, review: ReviewFormData) => {
+    await removeTags(id)
     await createTags(review.tags)
     const tagsData = review.tags.map(tag => {
         return {
@@ -63,12 +63,12 @@ const update = async (review: ReviewUpdateProps) => {
     })
     await prisma.review.update({
         where: {
-            id: review.id
+            id: id
         },
         data: {
             title: review.title,
             text: review.text,
-            authorsScore: review.authorsScore,
+            authorsScore: review.authorScore,
             tags: {
                 create: tagsData
             }

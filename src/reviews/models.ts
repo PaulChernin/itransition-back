@@ -1,19 +1,10 @@
-export type ReviewCreateProps = {
-    authorId: number,
-    categoryName: string,
+export type ReviewFormData = {
     productName: string,
+    productCategory: string,
     title: string,
     text: string,
-    authorsScore: number,
-    tags: Array<string>,
-    imageUrl: string
-}
-
-export type ReviewUpdateProps = {
-    id: number,
-    title: string,
-    text: string,
-    authorsScore: number,
+    authorScore: number,
+    imageUrl: string | null,
     tags: Array<string>
 }
 
