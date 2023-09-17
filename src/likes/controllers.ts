@@ -30,9 +30,16 @@ const getLikeCount: RequestHandler = async (req, res) => {
     res.json({ count: likeCount })
 }
 
+const getLikeCountByUser: RequestHandler = async (req, res) => {
+    const { userId } = req.body
+    const count = await services.getLikeCountByUser(userId)
+    res.json({ count: count })
+}
+
 export default {
     createLike,
     removeLike,
     getLikeCount,
-    getLike
+    getLike,
+    getLikeCountByUser
 }
