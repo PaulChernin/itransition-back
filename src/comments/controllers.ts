@@ -11,17 +11,18 @@ const createComment = async (req: JwtRequest<User>, res: Response) => {
     res.end()
 }
 
-export const getByReviewSchema = object({
+const getByReviewSchema = object({
     id: number().required()
 })
 
 const getByReview: RequestHandler = async (req, res) => {
-    const { id }: InferType<typeof getByReviewSchema> = req.body
-    const comments = await services.getByReview(id)
+    const body: InferType<typeof getByReviewSchema> = req.body
+    const comments = await services.getByReview(body.id)
     res.json(comments)
 }
 
 export default {
     createComment,
-    getByReview
+    getByReview,
+    getByReviewSchema
 }

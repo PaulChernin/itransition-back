@@ -5,9 +5,9 @@ if (!key) {
     throw new Error('No JWT key provided')
 }
 
-const requireAuth = expressjwt({
+const validateJwt = expressjwt({
     secret: key,
     algorithms: ["HS256"]
 })
 
-export default requireAuth
+export default validateJwt

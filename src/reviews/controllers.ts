@@ -3,10 +3,15 @@ import { Request as JwtRequest } from "express-jwt"
 import services from "./services"
 import { User } from "../types/User"
 import { ReviewFormData, UserReviewsGetProps } from "./models"
+import { InferType, number, object } from "yup"
+
+const getBestSchema = object({
+    count: number().min(1)
+})
 
 const getBest: RequestHandler = async (req, res) => {
-    const count = req.body.count
-    res.json(await services.getBest(count))
+    const body: InferType<typeof getBestSchema> = req.body
+    res.json(await services.getBest(body.count))
 }
 
 const getLatest: RequestHandler = async (req, res) => {
@@ -77,6 +82,7 @@ const remove: RequestHandler = async (req, res) => {
 
 export default {
     getBest,
+    getBestSchema,
     getLatest,
     getById,
     getByTag,
