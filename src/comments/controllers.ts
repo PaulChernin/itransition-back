@@ -2,6 +2,7 @@ import { RequestHandler, Response } from "express"
 import { Request as JwtRequest } from "express-jwt"
 import services from "./services"
 import { User } from "../types/User"
+import { InferType, number, object } from "yup"
 
 const createComment = async (req: JwtRequest<User>, res: Response) => {
     const userId = req.auth!.id
@@ -10,8 +11,12 @@ const createComment = async (req: JwtRequest<User>, res: Response) => {
     res.end()
 }
 
+export const getByReviewSchema = object({
+    id: number().required()
+})
+
 const getByReview: RequestHandler = async (req, res) => {
-    const { id } = req.body
+    const { id }: InferType<typeof getByReviewSchema> = req.body
     const comments = await services.getByReview(id)
     res.json(comments)
 }

@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import express from 'express'
+import express, { ErrorRequestHandler } from 'express'
 import bodyParser from 'body-parser'
 import cors from './config/cors'
 import logger from './config/logger'

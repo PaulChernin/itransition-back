@@ -2,12 +2,13 @@ import { Router } from "express"
 import reviewControllers from "../reviews/controllers"
 import likeControllers from "../likes/controllers"
 import ratingControllers from "../ratings/controllers"
-import commentControllers from "../comments/controllers"
+import commentControllers, { getByReviewSchema } from "../comments/controllers"
 import userControllers from "../users/controllers"
 import tagControllers from "../tags/controllers"
 import imageControllers from "../images/controllers"
 import authControllers from "../auth/controllers"
 import requireAuth from "../middleware/requireAuth"
+import { validate } from "../validate/validate"
 
 const router = Router()
 
@@ -27,7 +28,7 @@ router.post('/like/get/count/byUser', likeControllers.getLikeCountByUser)
 router.post('/rating/create', requireAuth, ratingControllers.createRating)
 router.post('/rating/get/average', ratingControllers.getAverageRating)
 router.post('/comment/create', requireAuth, commentControllers.createComment)
-router.post('/comment/get/byReview', commentControllers.getByReview)
+router.post('/comment/get/byReview', validate(getByReviewSchema), commentControllers.getByReview)
 router.post('/user/get/all', requireAuth, userControllers.getAll)
 router.post('/user/create', requireAuth, userControllers.create)
 router.post('/tag/get/popular', tagControllers.getPopular)

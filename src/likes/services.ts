@@ -49,7 +49,6 @@ const getLikeCount = async (reviewId: number) => {
 }
 
 const getLikeCountByUser = async (userId: number) => {
-    console.log(userId)
     return await prisma.like.count({
         where: {
             review: {
