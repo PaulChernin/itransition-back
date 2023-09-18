@@ -2,26 +2,22 @@ import { RequestHandler } from "express"
 import { Request as JwtRequest } from "express-jwt"
 import services from "./services"
 import { User } from "../types/User"
-import { ReviewFormData, UserReviewsGetProps } from "./models"
-import { InferType, number, object } from "yup"
-
-const getBestSchema = object({
-    count: number().min(1)
-})
+import { InferType } from "yup"
+import { schemas } from "./validation"
 
 const getBest: RequestHandler = async (req, res) => {
-    const body: InferType<typeof getBestSchema> = req.body
+    const body: InferType<typeof schemas.getBest> = req.body
     res.json(await services.getBest(body.count))
 }
 
 const getLatest: RequestHandler = async (req, res) => {
-    const count = req.body.count
-    res.json(await services.getLatest(count))
+    const body: InferType<typeof schemas.getLatest> = req.body
+    res.json(await services.getLatest(body.count))
 }
 
 const getById: RequestHandler = async (req, res) => {
-    const id = req.body.id
-    const review = await services.getById(id)
+    const body: InferType<typeof schemas.getById> = req.body
+    const review = await services.getById(body.id)
     if (review) {
         res.json(review)
         return
@@ -30,59 +26,48 @@ const getById: RequestHandler = async (req, res) => {
 }
 
 const getByTag: RequestHandler = async (req, res) => {
-    const tag = req.body.tag
-    res.json(await services.getByTag(tag))
+    const body: InferType<typeof schemas.getByTag> = req.body
+    res.json(await services.getByTag(body.tag))
 }
 
 const getByUser: RequestHandler = async (req: JwtRequest<User>, res) => {
     const user = req.auth!
-    if (!user.isAdmin && user.id === req.body.id) {
+    const body: InferType<typeof schemas.getByUser> = req.body
+    if (!(user.isAdmin || user.id === req.body.userId)) {
         res.status(403).end()
         return
     }
-    const props: UserReviewsGetProps = req.body
-    const reviews = await services.getByUser(props)
+    const reviews = await services.getByUser(body)
     res.json(reviews)
-}
-
-type CreateRequestBody = {
-    authorId: number,
-    review: ReviewFormData
 }
 
 const create: RequestHandler = async (req: JwtRequest<User>, res) => {
     const user = req.auth!
-    const { authorId, review }: CreateRequestBody = req.body
-    if (!user.isAdmin && user.id !== authorId) {
+    const body: InferType<typeof schemas.create> = req.body
+    if (!user.isAdmin && user.id !== body.authorId) {
         res.status(403).end()
         return
     }
-    const id = await services.create(authorId, review)
+    const id = await services.create(body.authorId, body.review)
     res.json({ id: id })
-}
-
-type UpdateRequestBody = {
-    id: number,
-    review: ReviewFormData
 }
 
 const update: RequestHandler = async (req: JwtRequest<User>, res) => {
     // TODO: check that user is author or admin
-    const { id, review }: UpdateRequestBody = req.body
-    await services.update(id, review)
+    const body: InferType<typeof schemas.update> = req.body
+    await services.update(body.id, body.review)
     res.end()
 }
 
 const remove: RequestHandler = async (req, res) => {
     // TODO: check that user is author or admin
-    const id: number = req.body.id
-    await services.remove(id)
+    const body: InferType<typeof schemas.remove> = req.body
+    await services.remove(body.id)
     res.end()
 }
 
 export default {
     getBest,
-    getBestSchema,
     getLatest,
     getById,
     getByTag,

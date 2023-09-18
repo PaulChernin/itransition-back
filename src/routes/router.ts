@@ -9,6 +9,7 @@ import imageControllers from "../images/controllers"
 import authControllers from "../auth/controllers"
 import validateJwt from "../middleware/validateJwt"
 import { validate } from "../validate/validate"
+import { schemas as reviewSchemas } from "../reviews/validation"
 
 const router = Router()
 
@@ -16,49 +17,49 @@ const routes = [
     {
         path: '/review/get/best',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: reviewSchemas.getBest,
         controller: reviewControllers.getBest
     },
     {
         path: '/review/get/latest',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: reviewSchemas.getLatest,
         controller: reviewControllers.getLatest
     },
     {
         path: '/review/get/byId',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: reviewSchemas.getById,
         controller: reviewControllers.getById
     },
     {
         path: '/review/get/byTag',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: reviewSchemas.getByTag,
         controller: reviewControllers.getByTag
     },
     {
         path: '/review/get/byUser',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: reviewSchemas.getByUser,
         controller: reviewControllers.getByUser
     },
     {
         path: '/review/create',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: reviewSchemas.create,
         controller: reviewControllers.create
     },
     {
         path: '/review/update',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: reviewSchemas.update,
         controller: reviewControllers.update
     },
     {
         path: '/review/remove',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: reviewSchemas.remove,
         controller: reviewControllers.remove
     },
     {

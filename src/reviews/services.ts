@@ -1,5 +1,6 @@
-import { ReviewFormData, UserReviewsGetProps } from "./models"
 import prisma from "../services/prisma"
+import { InferType } from "yup"
+import { schemas } from "./validation"
 
 const createProduct = async (name: string, category: string) => {
     const product = await prisma.product.create({
@@ -21,7 +22,7 @@ const createTags = async (texts: Array<string>) => {
     })
 }
 
-const create = async (authorId: number, review: ReviewFormData) => {
+const create = async (authorId: number, review: InferType<typeof schemas.review>) => {
     const productId = await createProduct(review.productName, review.productCategory)
     await createTags(review.tags)
     const tagsData = review.tags.map(tag => {
@@ -53,7 +54,7 @@ const removeTags = async (reviewId: number) => {
     })
 }
 
-const update = async (id: number, review: ReviewFormData) => {
+const update = async (id: number, review: InferType<typeof schemas.review>) => {
     await removeTags(id)
     await createTags(review.tags)
     const tagsData = review.tags.map(tag => {
@@ -167,7 +168,7 @@ const getByTag = async (tag: string) => {
     return reviews.map(review => mapReviewResponse(review))
 }
 
-const getByUser = async (props: UserReviewsGetProps) => {
+const getByUser = async (props: InferType<typeof schemas.getByUser>) => {
     const reviews = await prisma.review.findMany({
         where: {
             authorId: props.userId,
