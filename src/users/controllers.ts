@@ -11,13 +11,6 @@ const getAll: RequestHandler = async (req: JwtRequest<User>, res) => {
     res.json(await services.getAll())
 }
 
-const create: RequestHandler = async (req, res) => {
-    const nick = req.body.nick
-    const user = await services.create(nick)
-    res.json(user)
-}
-
 export default {
-    getAll,
-    create
+    getAll
 }

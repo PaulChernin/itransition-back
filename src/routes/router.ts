@@ -10,6 +10,11 @@ import authControllers from "../auth/controllers"
 import validateJwt from "../middleware/validateJwt"
 import { validate } from "../middleware/validate"
 import { schemas as reviewSchemas } from "../reviews/validation"
+import { schemas as likeSchemas } from "../likes/validation"
+import { ratingSchemas } from "../ratings/validation"
+import { commentSchemas } from "../comments/validation"
+import { tagSchemas } from "../tags/validation"
+
 
 const router = Router()
 
@@ -65,55 +70,55 @@ const routes = [
     {
         path: '/like/create',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: likeSchemas.create,
         controller: likeControllers.createLike
     },
     {
         path: '/like/remove',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: likeSchemas.remove,
         controller: likeControllers.removeLike
     },
     {
         path: '/like/get',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: likeSchemas.getLike,
         controller: likeControllers.getLike
     },
     {
         path: '/like/get/count',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: likeSchemas.getCount,
         controller: likeControllers.getLikeCount
     },
     {
         path: '/like/get/count/byUser',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: likeSchemas.getCountByUser,
         controller: likeControllers.getLikeCountByUser
     },
     {
         path: '/rating/create',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: ratingSchemas.create,
         controller: ratingControllers.createRating
     },
     {
         path: '/rating/get/average',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: ratingSchemas.getAverage,
         controller: ratingControllers.getAverageRating
     },
     {
         path: '/comment/create',
         requireAuth: true,
-        validationSchema: null,
+        validationSchema: commentSchemas.create,
         controller: commentControllers.createComment
     },
     {
         path: '/comment/get/byReview',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: commentSchemas.getByReview,
         controller: commentControllers.getByReview
     },
     {
@@ -123,21 +128,15 @@ const routes = [
         controller: userControllers.getAll
     },
     {
-        path: '/user/create',
-        requireAuth: true,
-        validationSchema: null,
-        controller: userControllers.create
-    },
-    {
         path: '/tag/get/popular',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: tagSchemas.getPopular,
         controller: tagControllers.getPopular
     },
     {
         path: '/tag/get/byPrefix',
         requireAuth: false,
-        validationSchema: null,
+        validationSchema: tagSchemas.getByPrefix,
         controller: tagControllers.getByPrefix
     },
     {
