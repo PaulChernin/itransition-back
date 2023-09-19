@@ -8,7 +8,7 @@ import tagControllers from "../tags/controllers"
 import imageControllers from "../images/controllers"
 import authControllers from "../auth/controllers"
 import validateJwt from "../middleware/validateJwt"
-import { validate } from "../validate/validate"
+import { validate } from "../middleware/validate"
 import { schemas as reviewSchemas } from "../reviews/validation"
 
 const router = Router()

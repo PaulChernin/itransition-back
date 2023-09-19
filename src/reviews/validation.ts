@@ -28,7 +28,7 @@ const review = object({
     title: string().required(),
     text: string().required(),
     authorScore: number().required().min(1).max(10),
-    imageUrl: string().url().nullable().required(),
+    imageUrl: string().url().nullable().defined(),
     tags: array().of(string().required()).required()
 })
 
