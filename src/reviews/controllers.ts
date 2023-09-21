@@ -41,6 +41,11 @@ const getByUser: RequestHandler = async (req: JwtRequest<User>, res) => {
     res.json(reviews)
 }
 
+const isAuthor = async (userId: number, reviewId: number) => {
+    const review = await services.getById(reviewId)
+    return review?.authorId === userId
+}
+
 const create: RequestHandler = async (req: JwtRequest<User>, res) => {
     const user = req.auth!
     const body: InferType<typeof schemas.create> = req.body
@@ -53,15 +58,23 @@ const create: RequestHandler = async (req: JwtRequest<User>, res) => {
 }
 
 const update: RequestHandler = async (req: JwtRequest<User>, res) => {
-    // TODO: check that user is author or admin
     const body: InferType<typeof schemas.update> = req.body
+    const user = req.auth!
+    if (!(user.isAdmin || await isAuthor(user.id, body.id))) {
+        res.status(403).end()
+        return
+    }
     await services.update(body.id, body.review)
     res.end()
 }
 
-const remove: RequestHandler = async (req, res) => {
-    // TODO: check that user is author or admin
+const remove: RequestHandler = async (req: JwtRequest<User>, res) => {
     const body: InferType<typeof schemas.remove> = req.body
+    const user = req.auth!
+    if (!(user.isAdmin || await isAuthor(user.id, body.id))) {
+        res.status(403).end()
+        return
+    }
     await services.remove(body.id)
     res.end()
 }
